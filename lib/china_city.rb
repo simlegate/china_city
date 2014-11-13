@@ -48,6 +48,20 @@ module ChinaCity
       "#{id_match[1]}#{id_match[2]}".ljust(6, '0')
     end
 
+    def search(text,limit=10)
+      results = []
+      return results if text.empty?
+
+      flatten.each do |district|
+        break if results.size.eql?(limit)
+
+        if district["text"] =~ /#{text}/ 
+          results << district
+        end
+      end
+      results
+    end
+
     private
     def data
       unless @list
@@ -69,7 +83,6 @@ module ChinaCity
         # }
         @list = {}
         #@see: http://github.com/RobinQu/LocationSelect-Plugin/raw/master/areas_1.0.json
-        json = JSON.parse(File.read("#{Engine.root}/db/areas.json"))
         districts = json.values.flatten
         districts.each do |district|
           id = district['id']
@@ -92,8 +105,17 @@ module ChinaCity
       @list
     end
 
+    def flatten
+      return @map if @map
+      @map = json.values.flatten
+    end
+
     def match(code)
       code.match(PATTERN)
+    end
+
+    def json
+      @json ||= JSON.parse(File.read("#{Engine.root}/db/areas.json"))
     end
   end
 end

@@ -1,5 +1,5 @@
 PATH
-  remote: /Users/saberma/Documents/china_city
+  remote: ../
   specs:
     china_city (0.0.4)
       jquery-rails
